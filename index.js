@@ -4,8 +4,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion , ObjectId } = require("mongodb");
 
+
 app.use(cors());
 app.use(express.json());
+
 
 //dbname =  task_manager   pass = !Y@MHrp@JTc5YKv
 //TasksManager - TaskCollection
@@ -53,13 +55,27 @@ async function run() {
 
     //delete 
 
-    app.delete("task/:id" , async(req,res)=>{
-        const deleteId = req.params.id;
-        const filter ={
-            _id: ObjectId(deleteId)
-        }
-        const result = TaskCollection.deleteOne(filter);
-        res.send(result)
+    app.delete("/deletetask/:id" , async(req,res)=>{
+      const id = req.params.id;
+      console.log(id)
+      const filter = { _id: ObjectId(id) };
+      const result = await TaskCollection.deleteOne(filter);
+      console.log(result);
+      res.send(result);
+    })
+
+    //update 
+    app.put("/complete/:id" , async(req,res)=>{
+      const id = req.params.id;
+      const filter ={_id: ObjectId(id)}
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: true
+        },
+      };
+      const result = await TaskCollection.updateOne(filter, updateDoc, options);
+      res.send(result)
     })
 
 
