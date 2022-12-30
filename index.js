@@ -71,12 +71,44 @@ async function run() {
       const options = { upsert: true };
       const updateDoc = {
         $set: {
-          status: true
+         status: true
         },
       };
       const result = await TaskCollection.updateOne(filter, updateDoc, options);
       res.send(result)
     })
+
+        //update 
+        app.put("/incomplete/:id" , async(req,res)=>{
+          const id = req.params.id;
+          const filter ={_id: ObjectId(id)}
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+             status: false
+            },
+          };
+          const result = await TaskCollection.updateOne(filter, updateDoc, options);
+          res.send(result)
+        })
+    
+          //update 
+          app.put("/update/:id" , async(req,res)=>{
+            const id = req.params.id;
+            const task = req.body;
+            const filter ={_id: ObjectId(id)}
+
+            const options = { upsert: true };
+            const updateDoc = {
+              $set: {
+               task_name : task.taskName
+              },
+            };
+            const result = await TaskCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+          })
+
+    //
 
 
 
